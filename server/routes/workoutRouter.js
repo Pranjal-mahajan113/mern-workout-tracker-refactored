@@ -3,9 +3,17 @@ const express = require("express");
 const Workout = require("../models/workoutModel");
 
 const router = express.Router();
+const authUser = require("../middleware/userMiddleware");
 
 //Require controllers---------------------------------------------------------
-const { getWorkouts,getWorkout ,createWorkout,editWorkout,deleteWorkout} = require("../controllers/workoutController");
+const {
+  getWorkouts,
+  getWorkout,
+  createWorkout,
+  editWorkout,
+  deleteWorkout,
+} = require("../controllers/workoutController");
+router.use(authUser);
 
 //GET entire data--------------------------------------------------
 router.get("/", getWorkouts);
@@ -14,13 +22,12 @@ router.get("/", getWorkouts);
 router.get("/:id", getWorkout);
 
 //Create Route ---POST--------------------------------------------
-router.post("/",createWorkout);
+router.post("/", createWorkout);
 
 //UPDATE RECORD-------------
-router.patch("/:id",editWorkout)
+router.patch("/:id", editWorkout);
 
 //DELETE RECORD----------
-router.delete("/:id",deleteWorkout)
-
+router.delete("/:id", deleteWorkout);
 
 module.exports = router;
