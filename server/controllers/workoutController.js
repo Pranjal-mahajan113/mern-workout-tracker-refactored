@@ -3,8 +3,9 @@ const express = require("express");
 const Workout = require("../models/workoutModel");
 
 const getWorkouts = async (req, res) => {
+  const user_id = req.user._id;
   try {
-    const workoutdata = await Workout.find().sort({ createdAt: -1 });
+    const workoutdata = await Workout.find({user_id}).sort({ createdAt: -1 });
     res.status(200).json(workoutdata);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -25,8 +26,10 @@ const getWorkout = async (req, res) => {
 
 //Create record------------------------------------
 const createWorkout = async (req, res) => {
+  const { title, reps, load } = req.body;
+  const user_id = req.user._id;
   try {
-    const newWorkout = new Workout(req.body);
+    const newWorkout = new Workout({ title, reps, load, user_id });
     const workoutsave = await newWorkout.save();
     res.status(201).json(workoutsave);
   } catch (err) {
@@ -63,7 +66,7 @@ const deleteWorkout = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Workout deleted sucessfully",
-      deletedData:workoutData
+      deletedData: workoutData,
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
