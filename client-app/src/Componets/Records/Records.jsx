@@ -1,14 +1,18 @@
 import React, { useContext, useEffect } from "react";
-import { Data } from "../../Context/workoutContext";
+import { Data } from "../../Context/WorkoutContext";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
 const Records = () => {
+  const { user } = useAuthContext();
   const { workouts, getWorkouts, deleteWorkout, toggleUpdate } =
     useContext(Data);
 
   useEffect(() => {
-    getWorkouts();
-  }, []);
+    if (user) {
+      getWorkouts();
+    }
+  }, [user, getWorkouts]);
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-4">

@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import axios from "axios";
-import { Data } from "../../Context/workoutContext";
+import { Data } from "../../Context/WorkoutContext";
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
 const Form = () => {
+  const { user } = useAuthContext();
   const {
     form,
     setForm,
@@ -29,8 +31,14 @@ const Form = () => {
     // Send POST request to backend
     const response = await axios.post(
       "http://localhost:4000/api/workouts",
-      form
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
     );
+
     setWorkouts([...workouts, response.data]);
 
     // Clear the form after submission
@@ -54,6 +62,11 @@ const Form = () => {
         title,
         reps,
         load,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
     );
     getWorkouts();
@@ -179,13 +192,10 @@ const Form = () => {
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:border-[#1aac83]"
                 />
                 <div className="flex gap-3">
-                   <button className="flex-1 bg-[#1aac83] text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">
-                  Update
-                </button>
-
+                  <button className="flex-1 bg-[#1aac83] text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">
+                    Update
+                  </button>
                 </div>
-
-                
               </form>
             </div>
           </>
